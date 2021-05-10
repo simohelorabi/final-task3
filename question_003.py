@@ -1,61 +1,49 @@
-class InvalidConnection(Exception):
-    """Triggered when we have an invalid connection."""
-    pass
-
-
-class Resistor():
+class Resistor:
     def __init__(self, value, left_terminal, right_terminal):
         self.value = value
-        self._left_terminal = left_terminal
-        self._right_terminal = right_terminal
+        self.left_terminal = left_terminal
+        self.right_terminal = right_terminal
 
-    @property
+    # getter method
     def left_terminal(self):
-        return self._left_terminal
+        return self.left_terminal
 
-    @left_terminal.setter
+    # setter method
     def left_terminal(self, value):
         if value < 0:
-            raise ValueError('Value of left termainl should be non negative')
-        self._left_terminal = value
+            raise ValueError("Value should be negative ")
+        self.left_terminal = value
 
-    @property
+    # getter method
     def right_terminal(self):
-        return self._right_terminal
+        return self.right_terminal
 
-    @right_terminal.setter
+    # setter method
     def right_terminal(self, value):
         if value < 0:
-            raise ValueError('Value of right termainl should be non negative')
-        self._right_terminal = value
+            raise ValueError("Value should be negative ")
+        self.right_terminal = value
 
-    def check_connection(self, r):
-        if self.left_terminal != r.left_terminal or self.right_terminal != r.right_terminal:
-            raise InvalidConnection('Invalid connection')
+    # check the connectin in left terminal and right terminal
+    def check_connection(self, resistor):
+        if not (self.left_terminal == resistor.left_terminal) or not (
+                self.right_terminal == resistor.right_terminal):
+            print('Invalid connection')
 
-    def add_in_series(self, r):
-        self.check_connection(r)
-        return self.value + r.value
+    def add_in_series(self, resistor):
+        self.check_connection(resistor)
+        return self.value + resistor.value
 
-    def add_in_parallel(self, r):
-        self.check_connection(r)
-        return 1 / (1 / self.value + 1 / r.value)
-
-    def __str__(self):
-        return f'Resistor({self.value},{self.left_terminal},{self.right_terminal})'
-
-
-def main():
-    # Test in series.
-    r1 = Resistor(10, 10, 11)
-    r2 = Resistor(12, 10, 11)
-    print(f'Adding in series {r1} and {r2} = {r1.add_in_series(r2)} kOhms')
-
-    # Test in parallel.
-    r1 = Resistor(10, 10, 11)
-    r2 = Resistor(12, 10, 11)
-    print(f'Adding in parallel {r1} and {r2} = {r1.add_in_parallel(r2)} kOhms')
+    def add_in_parallel(self, resistor):
+        self.check_connection(resistor)
+        return 1 / (1 / self.value + 1 / resistor.value)
 
 
-if __name__ == '__main__':
-    main()
+# object of the class
+resistor1 = Resistor(3, 2, 4)  #(8, 16, 10)
+resistor2 = Resistor(3, 2, 4)  #(4, 6, 10)
+
+series_connection = resistor1.add_in_series(resistor2)
+print(f"series connection : {series_connection} in Kohms")
+parallel_connection = resistor1.add_in_parallel(resistor2)
+print(f"parallel_connection : {parallel_connection} in Kohms")
